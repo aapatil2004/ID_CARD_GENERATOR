@@ -1,0 +1,440 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ID Card Generator</title>
+    <!--=============== REMIX ICONS ===============-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <!--=============== CSS ===============-->
+    <style>
+      /* Your CSS styles here */
+      /* Merged CSS styles */
+      h1 {
+        text-align: center;
+      }
+
+      form {
+        margin: 0 auto;
+        text-align: center;
+        max-width: 400px;
+      }
+
+      input[type="file"] {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 10px;
+      }
+
+      #templatePreviewContainer {
+        position: relative;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      #placeholders {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .placeholder {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+      <!-- Header content -->
+    </header>
+
+    <main class="main">
+      <!--==================== HOME ====================-->
+      <section class="home" id="home">
+        <!-- Home content -->
+      </section>
+
+      <!--==================== ABOUT ====================-->
+      <section class="about section container" id="about">
+        <!-- About content -->
+      </section>
+
+      <!--==================== STEPS ====================-->
+      <section class="steps section container" id="steps">
+        <!-- Steps content -->
+      </section>
+
+      <!-- ======================= INPUT ===================== -->
+      <section class="input section container" id="input">
+        <!-- Input content -->
+        <form
+          id="uploadForm"
+          enctype="multipart/form-data"
+          action="{{ url_for('id_card_generator') }}"
+          method="post"
+        >
+          <!-- Input form content -->
+        </form>
+      </section>
+    </main>
+
+    <!--=============== SCROLL UP ===============-->
+    <a href="#" class="scrollup" id="scroll-up">
+      <!-- Scroll up content -->
+    </a>
+
+    <!--=============== SCROLL REVEAL ===============-->
+    <script src="../static/js/scrollreveal.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="../static/js/main.js"></script>
+
+    <!--=============== SCRIPTS ===============-->
+    <script>
+      function previewImage(event) {
+        var preview = document.getElementById("templatePreview");
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function () {
+          preview.src = reader.result;
+          preview.style.display = "block";
+          addPlaceholders();
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function addPlaceholders() {
+        var templatePreviewContainer = document.getElementById(
+          "templatePreviewContainer"
+        );
+        var placeholders = document.getElementById("placeholders");
+        placeholders.innerHTML = ""; // Clear previous placeholders
+
+        // Add placeholders for name and portfolio
+        var namePlaceholder = createPlaceholder("Name");
+        var portfolioPlaceholder = createPlaceholder("Portfolio");
+
+        // Assign unique IDs to placeholders
+        namePlaceholder.id = "namePlaceholder";
+        portfolioPlaceholder.id = "portfolioPlaceholder";
+
+        // Append placeholders to the container
+        placeholders.appendChild(namePlaceholder);
+        placeholders.appendChild(portfolioPlaceholder);
+
+        // Make placeholders draggable
+        makeDraggable(namePlaceholder);
+        makeDraggable(portfolioPlaceholder);
+      }
+
+      function createPlaceholder(label) {
+        var placeholder = document.createElement("div");
+        placeholder.classList.add("placeholder");
+        placeholder.textContent = label;
+        return placeholder;
+      }
+
+      function makeDraggable(element) {
+        var offsetX = 0; // Calculate offsetX relative to the left edge of the element
+        var offsetY = 0; // Calculate offsetY relative to the top edge of the element
+        var isDragging = false;
+
+        element.style.position = "absolute";
+
+        element.addEventListener("mousedown", function (event) {
+          isDragging = true;
+          var templateContainer = document
+            .getElementById("templatePreviewContainer")
+            .getBoundingClientRect();
+          var templateRect = document
+            .getElementById("templatePreview")
+            .getBoundingClientRect();
+
+          // Calculate the offset relative to the template image
+          offsetX =
+            event.clientX - (templateRect.left - templateContainer.left);
+          offsetY = event.clientY - (templateRect.top - templateContainer.top);
+        });
+
+        document.addEventListener("mousemove", function (event) {
+          if (isDragging) {
+            var templateContainer = document
+              .getElementById("templatePreviewContainer")
+              .getBoundingClientRect();
+            var templateRect = document
+              .getElementById("templatePreview")
+              .getBoundingClientRect();
+            var x =
+              event.clientX -
+              offsetX -
+              (templateRect.left - templateContainer.left);
+            var y =
+              event.clientY -
+              offsetY -
+              (templateRect.top - templateContainer.top);
+            element.style.left = x + "px";
+            element.style.top = y + "px";
+
+            // Update hidden input fields with current position
+            updateHiddenFields(element.id, x, y);
+          }
+        });
+
+        document.addEventListener("mouseup", function () {
+          isDragging = false;
+          console.log(`Element ID: ${elementId}, X: ${x}, Y: ${y}`);
+        });
+      }
+
+      function updateHiddenFields(elementId, x, y) {
+        var templateContainer = document
+          .getElementById("templatePreviewContainer")
+          .getBoundingClientRect();
+        var templateRect = document
+          .getElementById("templatePreview")
+          .getBoundingClientRect();
+
+        // Calculate the relative position of the placeholder to the template image
+        var relativeX = x - (templateRect.left - templateContainer.left);
+        var relativeY = y - (templateRect.top - templateContainer.top);
+
+        // Update hidden input fields with current position relative to the template image
+        if (elementId === "namePlaceholder") {
+          document.getElementById("nameX").value = relativeX;
+          document.getElementById("nameY").value = relativeY;
+        } else if (elementId === "portfolioPlaceholder") {
+          document.getElementById("portfolioX").value = relativeX;
+          document.getElementById("portfolioY").value = relativeY;
+        }
+      }
+    </script>
+  </body>
+</html>
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ID Card Generator</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+
+      form {
+        margin: 0 auto;
+        text-align: center;
+        max-width: 400px;
+      }
+
+      input[type="file"] {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 10px;
+      }
+
+      #templatePreviewContainer {
+        position: relative;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      #placeholders {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .placeholder {
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ID Card Generator</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+      <label for="csvFile">Upload CSV File:</label><br />
+      <input
+        type="file"
+        id="csvFile"
+        name="csvFile"
+        accept=".csv"
+        required
+      /><br /><br />
+      <label for="templateImage">Upload Template Image:</label><br />
+      <input
+        type="file"
+        id="templateImage"
+        name="templateImage"
+        accept="image/*"
+        onchange="previewImage(event)"
+        required
+      /><br /><br />
+      <div id="templatePreviewContainer">
+        <img
+          id="templatePreview"
+          src="#"
+          alt="Template Preview"
+          style="display: none; max-width: 300px; max-height: 300px"
+        />
+        <div id="placeholders"></div>
+      </div>
+      <input type="hidden" id="nameX" name="nameX" value="" />
+      <input type="hidden" id="nameY" name="nameY" value="" />
+      <input type="hidden" id="portfolioX" name="portfolioX" value="" />
+      <input
+        type="hidden"
+        id="portfolioY"
+        name="portfolioY"
+        value=""
+      /><br /><br />
+      <input type="submit" value="Generate ID Cards" />
+    </form>
+    <p>{{ message }}</p>
+
+    <script>
+      function previewImage(event) {
+        var preview = document.getElementById("templatePreview");
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function () {
+          preview.src = reader.result;
+          preview.style.display = "block";
+          addPlaceholders();
+        };
+
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function addPlaceholders() {
+        var templatePreviewContainer = document.getElementById(
+          "templatePreviewContainer"
+        );
+        var placeholders = document.getElementById("placeholders");
+        placeholders.innerHTML = ""; // Clear previous placeholders
+
+        // Add placeholders for name and portfolio
+        var namePlaceholder = createPlaceholder("Name");
+        var portfolioPlaceholder = createPlaceholder("Portfolio");
+
+        // Assign unique IDs to placeholders
+        namePlaceholder.id = "namePlaceholder";
+        portfolioPlaceholder.id = "portfolioPlaceholder";
+
+        // Append placeholders to the container
+        placeholders.appendChild(namePlaceholder);
+        placeholders.appendChild(portfolioPlaceholder);
+
+        // Make placeholders draggable
+        makeDraggable(namePlaceholder);
+        makeDraggable(portfolioPlaceholder);
+      }
+
+      function createPlaceholder(label) {
+        var placeholder = document.createElement("div");
+        placeholder.classList.add("placeholder");
+        placeholder.textContent = label;
+        return placeholder;
+      }
+
+      function makeDraggable(element) {
+        var offsetX = 0; // Calculate offsetX relative to the left edge of the element
+        var offsetY = 0; // Calculate offsetY relative to the top edge of the element
+        var isDragging = false;
+
+        element.style.position = "absolute";
+
+        element.addEventListener("mousedown", function (event) {
+          isDragging = true;
+          var templateContainer = document
+            .getElementById("templatePreviewContainer")
+            .getBoundingClientRect();
+          var templateRect = document
+            .getElementById("templatePreview")
+            .getBoundingClientRect();
+
+          // Calculate the offset relative to the template image
+          offsetX =
+            event.clientX - (templateRect.left - templateContainer.left);
+          offsetY = event.clientY - (templateRect.top - templateContainer.top);
+        });
+
+        document.addEventListener("mousemove", function (event) {
+          if (isDragging) {
+            var templateContainer = document
+              .getElementById("templatePreviewContainer")
+              .getBoundingClientRect();
+            var templateRect = document
+              .getElementById("templatePreview")
+              .getBoundingClientRect();
+            var x =
+              event.clientX -
+              offsetX -
+              (templateRect.left - templateContainer.left);
+            var y =
+              event.clientY -
+              offsetY -
+              (templateRect.top - templateContainer.top);
+            element.style.left = x + "px";
+            element.style.top = y + "px";
+
+            // Update hidden input fields with current position
+            updateHiddenFields(element.id, x, y);
+          }
+        });
+
+        document.addEventListener("mouseup", function () {
+          isDragging = false;
+          console.log(`Element ID: ${elementId}, X: ${x}, Y: ${y}`);
+        });
+      }
+
+      function updateHiddenFields(elementId, x, y) {
+        var templateContainer = document
+          .getElementById("templatePreviewContainer")
+          .getBoundingClientRect();
+        var templateRect = document
+          .getElementById("templatePreview")
+          .getBoundingClientRect();
+
+        // Calculate the relative position of the placeholder to the template image
+        var relativeX = x - (templateRect.left - templateContainer.left);
+        var relativeY = y - (templateRect.top - templateContainer.top);
+
+        // Update hidden input fields with current position relative to the template image
+        if (elementId === "namePlaceholder") {
+          document.getElementById("nameX").value = relativeX;
+          document.getElementById("nameY").value = relativeY;
+        } else if (elementId === "portfolioPlaceholder") {
+          document.getElementById("portfolioX").value = relativeX;
+          document.getElementById("portfolioY").value = relativeY;
+        }
+      }
+    </script>
+  </body>
+</html>

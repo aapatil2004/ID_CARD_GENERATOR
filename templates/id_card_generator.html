@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--=============== FAVICON ===============-->
+    <!-- <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon"> -->
+
+    <!--=============== REMIX ICONS ===============-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="../static/style.css" />
+
+    <title>ID Card Generator</title>
+  </head>
+
+  <body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+      <nav class="nav container">
+        <a href="#" class="nav__logo">
+          <i class="ri-leaf-line nav__logo-icon"></i> ID Generator
+        </a>
+
+        <div class="nav__menu" id="nav-menu">
+          <ul class="nav__list">
+            <li class="nav__item">
+              <a href="#home" class="nav__link active-link">Home</a>
+            </li>
+            <li class="nav__item">
+              <a href="#about" class="nav__link">About</a>
+            </li>
+            <li class="nav__item">
+              <a href="#steps" class="nav__link">Steps</a>
+            </li>
+            <li class="nav__item">
+              <a href="#input" class="nav__link">Generate</a>
+            </li>
+          </ul>
+
+          <div class="nav__close" id="nav-close">
+            <i class="ri-close-line"></i>
+          </div>
+        </div>
+
+        <div class="nav__btns">
+          <!-- Theme change button -->
+          <i class="ri-moon-line change-theme" id="theme-button"></i>
+
+          <!-- Login and Sign-up buttons -->
+          <a href="login" class="button button--flex nav__button">Login</a>
+          <a href="register" class="button button--flex nav__button">Sign Up</a>
+
+          <div class="nav__toggle" id="nav-toggle">
+            <i class="ri-menu-line"></i>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="main">
+      <!--==================== HOME ====================-->
+      <section class="home" id="home">
+        <div class="home__container container grid">
+          <!-- here one image will come -->
+          <img
+            src="../static/images/man_holding_ID_card-removebg-newcropped.png"
+            alt="Hero Image"
+            class="home__img"
+          />
+
+          <div class="home__data">
+            <h1 class="home__title">
+              Generator your own custom<br />
+              ID card effortlessly.
+            </h1>
+            <p class="home__description">
+              Create your personalized ID card in just a few clicks ! With ID
+              card Generator.
+            </p>
+            <a href="#steps" class="button button--flex">
+              Explore <i class="ri-arrow-right-down-line button__icon"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!--==================== WORKING ====================-->
+      <section class="about section container" id="about">
+        <div class="about__container grid">
+          <!-- here one image will come -->
+          <div class="tech-images">
+            <img
+              src="../static/images/pillow_logo.png"
+              alt="pillow-logo"
+              class="about__img"
+            />
+          </div>
+
+          <div class="about__data">
+            <h2 class="section__title about__title">
+              How it Works & <br />
+              what Techstack is used
+            </h2>
+
+            <p class="about__description">
+              this project is made by using python-flask and pandas for backend
+              and javascript for frontend
+            </p>
+
+            <div class="about__details">
+              <p class="about__details-description">
+                <i class="ri-checkbox-fill about__details-icon"></i>
+                CSV file is read by using pandas.
+              </p>
+              <p class="about__details-description">
+                <i class="ri-checkbox-fill about__details-icon"></i>
+                Flask is used to manage routes.
+              </p>
+              <p class="about__details-description">
+                <i class="ri-checkbox-fill about__details-icon"></i>
+                Pillow library from python is used to create and generate
+                images.
+              </p>
+              <p class="about__details-description">
+                <i class="ri-checkbox-fill about__details-icon"></i>
+                Zipfile is downloaded by using python module zipfile.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!--==================== STEPS ====================-->
+      <section class="steps section container" id="steps">
+        <div class="steps__bg">
+          <h2 class="section__title-center steps__title">
+            Steps to start generating <br />
+            your ID card.
+          </h2>
+
+          <div class="steps__container grid">
+            <div class="steps__card">
+              <div class="steps__card-number">01</div>
+              <h3 class="steps__card-title">Input CSV file</h3>
+              <p class="steps__card-description">
+                Give your CSV file containing Data of students / employees
+              </p>
+            </div>
+
+            <div class="steps__card">
+              <div class="steps__card-number">02</div>
+              <h3 class="steps__card-title">Input Template</h3>
+              <p class="steps__card-description">
+                Give template for your ID card.
+              </p>
+            </div>
+
+            <div class="steps__card">
+              <div class="steps__card-number">03</div>
+              <h3 class="steps__card-title">Click download button</h3>
+              <p class="steps__card-description">
+                Click the download button to download zip file containing ID
+                cards .
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =======================INPUT================================== -->
+
+      <section class="input section container" id="input">
+        <form
+          id="uploadForm"
+          enctype="multipart/form-data"
+          action="{{ url_for('id_card_generator') }}"
+          method="post"
+        >
+          <div class="input-div">
+            <h3>Upload your file</h3>
+            <label for="csvFile">
+              <div class="drag-area">
+                <div class="drag-icon">
+                  <i class="ri-image-add-line"></i>
+                </div>
+                <input
+                  type="file"
+                  name="csvFile"
+                  id="csvFile"
+                  accept=".csv"
+                  required
+                  hidden
+                />
+                <div class="file-message">
+                  <div class="default-message">
+                    <span class="drag-header drag-special"
+                      >Upload your CSV</span
+                    >
+                    <span class="drag-header"
+                      ><span class="drag-button">Browse</span></span
+                    >
+                  </div>
+                  <div class="success-message">
+                    <span class="drag-header"
+                      >Successfully Uploaded CSV file</span
+                    >
+                  </div>
+                </div>
+
+                <span class="drag-support"> Supports: CSV</span>
+              </div>
+            </label>
+          </div>
+          <div class="input-div">
+            <h3>Upload your template</h3>
+            <label for="templateImage">
+              <div class="drag-area">
+                <div class="drag-icon">
+                  <i class="ri-image-add-line"></i>
+                </div>
+                <input
+                  type="file"
+                  name="templateImage"
+                  id="templateImage"
+                  accept=".png"
+                  required
+                  hidden
+                  onchange="previewImage(event)"
+                />
+                <div class="file-message">
+                  <div class="default-message">
+                    <span class="drag-header drag-special"
+                      >Upload your Image file</span
+                    >
+                    <span class="drag-header"
+                      ><span class="drag-button">Browse</span></span
+                    >
+                  </div>
+                  <div class="success-message">
+                    <span class="drag-header"
+                      >Successfully Uploaded Image file</span
+                    >
+                    <div id="preview" style="margin-top: 10px"></div>
+                  </div>
+                </div>
+                <span class="drag-support"> Supports: PNG, JPG, JPEG</span>
+              </div>
+            </label>
+          </div>
+          <div class="generate-btn-div">
+            <button type="submit" id="generate-btn" class="button">
+              Generate ID Cards
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <!--=============== SCROLL UP ===============-->
+    <a href="#" class="scrollup" id="scroll-up">
+      <i class="ri-arrow-up-fill scrollup__icon"></i>
+    </a>
+
+    <!--=============== SCROLL REVEAL ===============-->
+    <script src="../static/js/scrollreveal.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="../static/js/main.js"></script>
+
+    <script>
+      function previewImage(event) {
+        var file = event.target.files[0];
+        var imageType = /image.*/;
+
+        if (file.type.match(imageType)) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+            var img = new Image();
+            img.src = reader.result;
+            img.width = "300";
+
+            var previewDiv = document.getElementById("preview");
+            previewDiv.innerHTML = ""; // Clear previous preview
+            previewDiv.appendChild(img);
+
+            // Show the success message
+            var successMessage = document.getElementById("successMessage");
+            successMessage.style.display = "block";
+          };
+
+          reader.readAsDataURL(file);
+        } else {
+          alert("Please select a valid image file.");
+        }
+      }
+    </script>
+  </body>
+</html>

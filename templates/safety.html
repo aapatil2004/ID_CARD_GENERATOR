@@ -1,0 +1,124 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Generator</title>
+    <!--=============== FAVICON ===============-->
+    <!-- <link rel="shortcut icon" href="assets/img/favicon.png" type="image/x-icon"> -->
+
+    <!--=============== REMIX ICONS ===============-->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet"/>
+
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+    <!--==================== HEADER ====================-->
+    <!-- Header code remains unchanged -->
+
+    <main class="main">
+        <!--==================== HOME ====================-->
+        <!-- Home section code remains unchanged -->
+
+        <!--==================== WORKING ====================-->
+        <!-- Working section code remains unchanged -->
+
+        <!--==================== STEPS ====================-->
+        <!-- Steps section code remains unchanged -->
+
+        <!--==================== INPUT ====================-->
+        <section class="input section container">
+            <form id="uploadForm" enctype="multipart/form-data" action="{{ url_for('id_card_generator') }}" method="post">
+                <div class="input-div">
+                    <h3>Upload your file</h3>
+                    <!-- CSV File Upload -->
+                    <label for="csvFile">
+                        <div class="drag-area">
+                            <!-- Drag area icon -->
+                            <div class="drag-icon">
+                                <i class="ri-image-add-line"></i>
+                            </div>
+                            <!-- CSV File input -->
+                            <input type="file" name="csvFile" id="csvFile" accept=".csv" required hidden onchange="updatePreview(event, 'csv')"/>
+                            <!-- File message -->
+                            <div class="file-message">
+                                <div class="default-message">
+                                    <span class="drag-header">Upload your CSV</span>
+                                    <span class="drag-header"><span class="drag-button">Browse</span></span>
+                                </div>
+                                <div class="success-message">
+                                    <span class="drag-header">Successfully Uploaded CSV file</span>
+                                </div>
+                            </div>
+                            <!-- Drag area support -->
+                            <span class="drag-support"> Supports: CSV</span>
+                        </div>
+                    </label>
+                    <!-- Preview for CSV file -->
+                    <img id="csvPreview" src="" alt="CSV Preview" style="display: none;">
+                </div>
+                <div class="input-div">
+                    <h3>Upload your template</h3>
+                    <!-- Template Image Upload -->
+                    <label for="templateImage">
+                        <div class="drag-area">
+                            <!-- Drag area icon -->
+                            <div class="drag-icon">
+                                <i class="ri-image-add-line"></i>
+                            </div>
+                            <!-- Template Image input -->
+                            <input type="file" name="templateImage" id="templateImage" accept=".png" required hidden onchange="updatePreview(event, 'template')"/>
+                            <!-- File message -->
+                            <div class="file-message">
+                                <div class="default-message">
+                                    <span class="drag-header">Upload your Image file</span>
+                                    <span class="drag-header"><span class="drag-button">Browse</span></span>
+                                </div>
+                                <div class="success-message">
+                                    <span class="drag-header">Successfully Uploaded Image file</span>
+                                </div>
+                            </div>
+                            <!-- Drag area support -->
+                            <span class="drag-support"> Supports: PNG</span>
+                        </div>
+                    </label>
+                    <!-- Preview for template image -->
+                    <img id="templatePreview" src="" alt="Template Preview" style="display: none;">
+                </div>
+                <div class="generate-btn-div">
+                    <!-- Generate Button -->
+                    <button type="submit" id="generate-btn" class="button">
+                        Generate ID Cards
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!--=============== SCROLL UP ===============-->
+        <!-- Scroll Up code remains unchanged -->
+
+        <!--=============== SCROLL REVEAL ===============-->
+        <script src="{{ url_for('static', filename='js/scrollreveal.min.js') }}"></script>
+
+        <!--=============== MAIN JS ===============-->
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+        <!-- Script for updating the preview -->
+        <script>
+            function updatePreview(event, type) {
+                const file = event.target.files[0];
+                if (type === 'csv') {
+                    document.getElementById('csvPreview').src = URL.createObjectURL(file);
+                    document.getElementById('csvPreview').style.display = 'block'; // Display the preview image
+                } else if (type === 'template') {
+                    document.getElementById('templatePreview').src = URL.createObjectURL(file);
+                    document.getElementById('templatePreview').style.display = 'block'; // Display the preview image
+                }
+            }
+        </script>
+    </body>
+</html>
+
