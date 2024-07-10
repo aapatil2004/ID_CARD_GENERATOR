@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ID Card Generator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div id="container">
+      <h1>ID Card Generator</h1>
+      <form
+        id="uploadForm"
+        enctype="multipart/form-data"
+        action="{{ url_for('id_card_generator') }}"
+        method="post"
+      >
+        <label for="csvFile">Upload CSV File:</label>
+        <input type="file" name="csvFile" id="csvFile" accept=".csv" required />
+        <br />
+        <label for="templateImage">Upload Template Image (PNG):</label>
+        <input
+          type="file"
+          name="templateImage"
+          id="templateImage"
+          accept=".png"
+          required
+        />
+        <br />
+        <button type="submit">Generate ID Cards</button>
+      </form>
+
+      <a
+        id="downloadBtn"
+        href="{{ url_for('id_card_generator') }}"
+        style="display: none"
+        >Download All ID Cards</a
+      >
+
+      <div id="idCardList"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", function (event) {
+          // Display the "Generating..." message
+          document.getElementById("downloadBtn").innerText = "Generating...";
+          document.getElementById("downloadBtn").style.display = "block";
+        });
+    </script>
+  </body>
+</html>
